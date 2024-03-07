@@ -1,8 +1,13 @@
 {
-    "entryFile": "api/index.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "spec": {
-      "outputDirectory": "public",
-      "specVersion": 3
-    }
+  "entryFile": "api/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["api/controllers/*.ts"],
+  "spec": {
+    "outputDirectory": "public",
+    "specVersion": 3
+  },
+  "routes": {
+    "routesDir": "api/router"
+    
   }
+}
