@@ -1,17 +1,28 @@
-import express from "express";
-import cors from 'cors'
-import wppRouter from "./routers/wpp";
+import express from 'express';
+import cors from 'cors';
+import wppRouter from './routers/wpp';
+import swaggerUi from 'swagger-ui-express';
 
 const app = express();
 
 app.use(cors());
 
-app.use("/api/wpp", wppRouter);
+app.use('/wpp', wppRouter);
 
+app.use(
+  '/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: '/public/swagger.json'
+    }
+  })
+);
 
-app.get("/", (req, res) => res.send("Ready to use!"));
+app.use('/public', express.static('public'));
 
-
-app.listen(8081, () => console.log("Server ready on port 8081."));
+app.listen(8081, () => {
+  console.log('Server is running on port 8081');
+});
 
 module.exports = app;

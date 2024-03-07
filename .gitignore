@@ -1,5 +1,6 @@
 .vercel
-.ww
+.wwebjs_cache
+.wwebjs_auth
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/node
