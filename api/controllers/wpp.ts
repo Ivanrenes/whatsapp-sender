@@ -35,6 +35,9 @@ export default class WppController {
     return QRreadStream;
   }
 
+  // @Get('/create-session')
+  // public async getSessions(): Promise<Readable> {}
+
   @Get('/get-chats')
   public async getChats() {
     const chats = await this.client.getChats();
