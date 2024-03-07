@@ -1,36 +1,40 @@
 import WAWebJS, { Client } from 'whatsapp-web.js';
 import QRCode from 'qrcode';
-import { Get, Route } from 'tsoa';
+import { Controller, Get, Response, Route } from 'tsoa';
 import { PassThrough, Readable } from 'stream';
+import { wppClient } from '../wppClient';
 
 @Route('/wpp')
-export default class WppController {
+export default class WppController extends Controller {
   //create property client
-  private client: Client;
-
-  constructor(client: Client) {
-    this.client = client;
-  }
+  readonly #client: Client = wppClient;
 
   @Get('/auth')
-  public async initializeWebQR(): Promise<Readable> {
+  @Response('200', 'Success', 'sdsd')
+  public async initializeWebQR() {
+    this.#client.initialize();
     const QRreadStream: Promise<Readable> = new Promise((resolve) => {
       const stream = new PassThrough();
-      this.client.on('qr', async (qr) => {
+      this.#client.on('qr', async (qr) => {
+        console.log('QR received!', qr);
+
         await QRCode.toFileStream(stream, qr, {
           type: 'png',
           width: 200,
           errorCorrectionLevel: 'H'
         });
+        console.log('QR code generated!');
         resolve(stream);
       });
 
-      this.client.on('ready', async () => {
+      this.#client.on('ready', async () => {
         console.log('Client is ready!');
       });
     });
 
-    this.client.initialize();
+    this.setHeader('Content-Type', 'image/png');
+
+    this.#client.initialize();
 
     return QRreadStream;
   }
@@ -40,7 +44,7 @@ export default class WppController {
 
   @Get('/get-chats')
   public async getChats() {
-    const chats = await this.client.getChats();
+    const chats = await this.#client.getChats();
     return chats.map((chat) => {
       return {
         id: chat.id._serialized,
@@ -54,7 +58,7 @@ export default class WppController {
     content: WAWebJS.MessageContent,
     options: WAWebJS.MessageSendOptions
   ) {
-    return this.client.sendMessage(chatId, content, options);
+    return this.#client.sendMessage(chatId, content, options);
   }
 }
 

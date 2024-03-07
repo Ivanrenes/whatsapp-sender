@@ -1,13 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import wppRouter from './routers/wpp';
 import swaggerUi from 'swagger-ui-express';
+
+import { RegisterRoutes } from './router/routes';
 
 const app = express();
 
 app.use(cors());
 
-app.use('/wpp', wppRouter);
+RegisterRoutes(app);
 
 app.use(
   '/docs',
