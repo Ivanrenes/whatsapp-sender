@@ -27,7 +27,7 @@ app.listen(8081, () => {
   console.log('Server is running on port 8081');
 });
 
-process.on('exit', () => {
+app.on('exit', async () => {
   exec('rm -rf .wwebjs_cache .wwebjs_auth');
 });
 

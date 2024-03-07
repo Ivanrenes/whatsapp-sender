@@ -1,3 +1,7 @@
 {
-    "files.exclude": {}
+    "files.exclude": {},
+    "cSpell.words": [
+        "libsql",
+        "TURSO"
+    ]
 }
