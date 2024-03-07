@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsx watch api/index.ts",
+    "start:dev": "tsc --watch",
+    "start:prod": "tsc && node build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "swagger": "tsoa spec",
+    "prod": "tsc && node build/index.js",
+    "build": "npm install && npx tsc",
+
     "prettier-format": "prettier --config .prettierrc.json 'api/**/*.ts' --write"
   },
   "keywords": [],

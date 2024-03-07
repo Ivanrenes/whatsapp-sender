@@ -16,8 +16,17 @@ router.get('/auth', async (req, res) => {
     res.status(500);
   }
 });
+router.get('/get-sessions', async (req, res) => {
+  try {
+    const wppController = new WppController(client);
+    const chats = await wppController.getChats();
+    res.send(chats);
+  } catch (error) {
+    res.status(500);
+  }
+});
 
-router.get('/get-chats', async (req, res) => {
+router.get('/:sessionId/get-chats', async (req, res) => {
   try {
     const wppController = new WppController(client);
     const chats = await wppController.getChats();
