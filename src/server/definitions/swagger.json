@@ -1,0 +1,168 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"AuthenticatedUser": {
+				"properties": {
+					"registered": {
+						"type": "boolean"
+					},
+					"localId": {
+						"type": "string"
+					},
+					"expiresIn": {
+						"type": "string"
+					},
+					"refreshToken": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"idToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"registered",
+					"localId",
+					"expiresIn",
+					"refreshToken",
+					"email",
+					"idToken"
+				],
+				"type": "object"
+			}
+		},
+		"securitySchemes": {
+			"fb-token": {
+				"type": "apiKey",
+				"name": "access_token",
+				"in": "query"
+			}
+		}
+	},
+	"info": {
+		"title": "whatsapp-sender",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/wpp/auth": {
+			"get": {
+				"operationId": "InitializeWebQR",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string",
+									"format": "byte"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"fb-token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/wpp/get-chats": {
+			"get": {
+				"operationId": "GetChats",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"name",
+											"id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"fb-token": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/user/auth/login": {
+			"post": {
+				"operationId": "SignIn",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthenticatedUser"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

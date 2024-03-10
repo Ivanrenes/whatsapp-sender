@@ -1,12 +1,10 @@
-import { Readable } from 'stream';
-
 /**
  * The Singleton class defines the `getInstance` method that lets clients access
  * the unique singleton instance.
  */
 
 interface Session {
-  stream: Readable;
+  qr: string;
   startTime: number;
   endTime: number;
 }

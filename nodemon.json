@@ -1,6 +1,6 @@
 {
-    "watch": ["api"],
+    "watch": ["src/server"],
     "ext": ".ts",
-    "ignore": ["api/router"],
-    "exec": "tsoa spec-and-routes && ts-node api/index.ts"  
+    "ignore": ["src/server/router"],
+    "exec": "tsoa spec-and-routes && ts-node src/server/index.ts"  
 }

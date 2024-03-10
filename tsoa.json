@@ -1,13 +1,32 @@
 {
-  "entryFile": "api/index.ts",
+  "entryFile": "src/server/index.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
-  "controllerPathGlobs": ["api/controllers/*.ts"],
+  "controllerPathGlobs": ["src/server/controllers/*.ts"],
   "spec": {
-    "outputDirectory": "public",
-    "specVersion": 3
+    "outputDirectory": "src/server/definitions",
+    "specVersion": 3,
+    "securityDefinitions": {
+        "fb-token": {
+            "type": "apiKey",
+            "name": "access_token",
+            "in": "query"
+        }
+    }
   },
   "routes": {
-    "routesDir": "api/router"
-    
+    "routesDir": "src/server/router",
+    "authenticationModule": "src/server/middlewares/authentication.ts"
+  },
+  "compilerOptions":{
+    "paths": {
+      "@/utils/*": ["./src/utils/*"],
+      "@/middlewares/*": ["./src/server/middlewares/*"],
+      "@/controllers/*": ["./src/server/controllers/*"],
+      "@/services/*":["./src/server/services/*"],
+      "@/models/*":["./src/server/models/*"],
+      "@/types/*":["./src/server/types/*"],
+      "@/providers/*":["./src/server/providers/*"],
+      "@/firebase/*":["./src/firebase/*"]
+    }
   }
 }

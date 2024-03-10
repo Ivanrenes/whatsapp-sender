@@ -1,10 +1,11 @@
 import WAWebJS, { Client } from 'whatsapp-web.js';
-import QRCode from 'qrcode';
-import { Controller, Get, Response, Route } from 'tsoa';
+import { Controller, Get, Middlewares, Response, Route, Security } from 'tsoa';
 import { PassThrough, Readable } from 'stream';
-import { wppClient } from '../wppClient';
+import { wppClient } from '../providers/wpp-client';
 import { addMinutes, getUnixTime } from 'date-fns';
 import { Sessions } from '../sessions';
+import { generateQr } from '@/utils/qr';
+import { checkSession } from '@/middlewares/check-session';
 
 @Route('/wpp')
 export default class WppController extends Controller {
@@ -12,30 +13,34 @@ export default class WppController extends Controller {
   readonly #client: Client = wppClient;
   readonly #sessions = Sessions.getInstance();
 
+  @Security('fb-token')
   @Get('/auth')
   @Response('200', 'Success', 'sdsd')
   public async initializeWebQR() {
+    this.setHeader('Content-Type', 'image/png');
+
+    const stream = new PassThrough();
     const currentSession = this.#sessions.get('sessionUnique');
 
     if (
       currentSession !== undefined &&
       getUnixTime(new Date()) < currentSession.endTime
     ) {
-      return currentSession.stream;
+      console.log('Session is still valid');
+      console.log('currentSession time', JSON.stringify(currentSession));
+
+      await generateQr(stream, currentSession.qr);
+      return stream as Readable;
     }
 
     const QRreadStream: Promise<Readable> = new Promise((resolve) => {
-      const stream = new PassThrough();
+      console.log('Creating new session...');
 
       this.#client.on('qr', async (qr) => {
-        await QRCode.toFileStream(stream, qr, {
-          type: 'png',
-          width: 200,
-          errorCorrectionLevel: 'H'
-        });
+        await generateQr(stream, qr);
 
         this.#sessions.set('sessionUnique', {
-          stream,
+          qr,
           startTime: getUnixTime(new Date()),
           endTime: getUnixTime(addMinutes(new Date(), 1))
         });
@@ -52,11 +57,15 @@ export default class WppController extends Controller {
       }
     });
 
-    this.setHeader('Content-Type', 'image/png');
+    await QRreadStream;
 
-    return await QRreadStream;
+    await this.#client.destroy();
+
+    return QRreadStream;
   }
 
+  @Security('fb-token')
+  @Middlewares(checkSession)
   @Get('/get-chats')
   public async getChats() {
     const chats = await this.#client.getChats();
