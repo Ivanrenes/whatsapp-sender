@@ -34,10 +34,11 @@
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
     // "moduleResolution": "node10",                     /* Specify how TypeScript looks up a file from a given module specifier. */
     "paths": {
-      "@/utils/*": ["./src/utils/*"],
+      "@/utils/*": ["./src/server/utils/*"],
       "@/middlewares/*": ["./src/server/middlewares/*"],
       "@/controllers/*": ["./src/server/controllers/*"],
       "@/services/*":["./src/server/services/*"],
+      "@/models/*":["./src/server/models/*"],
       "@/types/*":["./src/server/types/*"],
       "@/providers/*":["./src/server/providers/*"],
       "@/firebase/*":["./src/firebase/*"],
@@ -120,7 +121,5 @@
     "resolveJsonModule": true
   },
   "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", ".wwebjs_auth", ".wwebjs_cache", ],
-  "files": ["./src/server/types/express.d.ts"]
-  
+  "exclude": ["node_modules", ".wwebjs_auth", ".wwebjs_cache", ],  
 }

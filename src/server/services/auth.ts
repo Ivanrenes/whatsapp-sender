@@ -1,4 +1,4 @@
-import { Auth } from '@/firebase/app';
+import { Auth } from '../../firebase/app';
 import fbClient from '@/providers/fb-client';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
 import { OnlyInstantiableByContainer, Singleton } from 'typescript-ioc';

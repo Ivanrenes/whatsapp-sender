@@ -19,7 +19,7 @@
   },
   "compilerOptions":{
     "paths": {
-      "@/utils/*": ["./src/utils/*"],
+      "@/utils/*": ["./src/server/utils/*"],
       "@/middlewares/*": ["./src/server/middlewares/*"],
       "@/controllers/*": ["./src/server/controllers/*"],
       "@/services/*":["./src/server/services/*"],

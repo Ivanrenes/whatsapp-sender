@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Auth } from '@/firebase/app';
+import { Auth } from '../../firebase/app';
 import { AuthError } from '@/middlewares/error-handling';
 import { Request } from 'express';
 
@@ -16,11 +16,9 @@ export const expressAuthentication = async (
       }
     if (token) {
       try {
-        console.log('User: ', token);
-
         const decodedToken = await Auth.verifyIdToken(token as string);
         const user = await Auth.getUser(decodedToken.uid);
-        request.user = user;
+        request.body['user'] = user;
         return await Promise.resolve();
       } catch (error) {
         console.log(error);

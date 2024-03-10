@@ -1,9 +1,10 @@
-import { Collection } from 'fireorm';
+import { BaseModel } from '@/models/base-model';
+import { Collection, getRepository } from 'fireorm';
 
 @Collection()
-class Session {
+export class Session extends BaseModel {
   id!: string;
-  qr!: string;
-  startTime!: number;
-  endTime!: number;
+  uid!: string;
 }
+
+export const sessionRepository = getRepository(Session);

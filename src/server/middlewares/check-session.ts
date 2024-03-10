@@ -1,16 +1,17 @@
+import { SessionsService } from '@/services/sessions';
 import { NextFunction, Request, Response } from 'express';
-import { Sessions } from '../sessions';
 
 export async function checkSession(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const sessions = Sessions.getInstance();
-  const currentSession = sessions.get('sessionUnique');
+  const user = req.body.user;
+  const sessions = new SessionsService();
+  const currentSession = await sessions.getSession(user!.uid);
 
-  if (currentSession === undefined) {
-    return res.status(401).send({ message: 'No active session' });
+  if (!currentSession) {
+    return res.status(401).send({ message: 'No session active!' });
   }
   return next();
 }

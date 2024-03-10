@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
-import admin from 'firebase-admin';
 import * as fireorm from 'fireorm';
+import admin from 'firebase-admin';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,8 +24,7 @@ const App = admin.initializeApp({
   credential: admin.credential.cert(svc as admin.ServiceAccount)
 });
 const Auth = admin.auth(App);
+const Firestore = admin.firestore(App);
+fireorm.initialize(Firestore);
 
-const firestore = admin.firestore();
-fireorm.initialize(firestore);
-
-export { App, Auth };
+export { App, Auth, Firestore };
