@@ -8,6 +8,7 @@ import { wppClientBuilder } from '@/providers/wpp-client';
 import { waitFor } from 'poll-until-promise';
 import WAWebJS from 'whatsapp-web.js';
 import path from 'path';
+import { exec } from 'child_process';
 
 interface Session {
   qr?: string;
@@ -123,9 +124,18 @@ export class Sessions {
     if (session) {
       try {
         console.log(`[${Sessions.name}] Restarting session:`, sessionId);
-        await session.client.destroy();
-        this.sessions.delete(sessionId);
+        console.log(
+          await Promise.allSettled(
+            ((await session.client.pupBrowser?.pages()) ?? []).map((page) =>
+              page.close()
+            )
+          )
+        );
+
         await this.deleteSession(sessionId);
+        const chromiumPid = session.client.pupBrowser?.process()?.pid;
+
+        exec(`kill -9 ${chromiumPid}`);
         return await this.setUpSession(sessionId);
       } catch (error) {
         console.log(
@@ -251,7 +261,9 @@ export class Sessions {
       client.pupPage?.removeAllListeners('close');
       client.pupPage?.removeAllListeners('error');
 
-      console.log(`[LOGGING OUT] Logging out session ${sessionId}`);
+      console.log(
+        `[LOGGING OUT] Logging out session (NOT CLIENT LOGGING OUT) ${sessionId}`
+      );
 
       console.log(`[LOGGING OUT] Destroying session ${sessionId}`);
       await client.destroy();
@@ -260,6 +272,7 @@ export class Sessions {
       while (client.pupBrowser!.isConnected()) {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
+
       await this.deleteSessionFolder(sessionId);
       this.sessions.delete(sessionId);
     } catch (error) {

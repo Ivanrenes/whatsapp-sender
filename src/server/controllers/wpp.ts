@@ -76,7 +76,7 @@ export default class WppController extends Controller {
           qr,
           client: session.client,
           startTime: getUnixTime(new Date()),
-          endTime: getUnixTime(addMinutes(new Date(), 5))
+          endTime: getUnixTime(addMinutes(new Date(), 1))
         });
 
         resolve(stream);
